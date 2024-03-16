@@ -1,0 +1,44 @@
+class Solution:
+    def fullJustify(self, words: List[str], maxWidth: int) -> List[str]:
+        result = []
+        line = []
+        count = 0
+
+        for i in range(len(words)):
+            word = words[i]
+            if count + len(word) + len(line) <= maxWidth:
+                line.append(word)
+                count += len(word)
+            else:
+                result.append(self.rearrange(line, maxWidth, count))
+                count = len(word)
+                line = [word]
+
+            if i == len(words) - 1:
+                result.append(' '.join(line).ljust(maxWidth, ' '))
+                return result
+
+        return result
+
+    def rearrange(self, line: List[str], maxWidth: int, count: int):
+        if len(line) == 1 or len(line) == maxWidth:
+            return line[0].ljust(maxWidth, ' ')
+
+        res = ''
+        total_spaces = maxWidth - count
+        num_gaps = len(line) - 1
+
+        if num_gaps == 0:
+            return line[0].ljust(maxWidth, ' ')
+
+        spaces_between_words = total_spaces // num_gaps
+        extra_spaces = total_spaces % num_gaps
+
+        for i in range(len(line) - 1):
+            res += line[i] + ' ' * spaces_between_words
+            if extra_spaces > 0:
+                res += ' '
+                extra_spaces -= 1
+
+        res += line[-1]
+        return res
