@@ -1,0 +1,21 @@
+
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+       
+        currEndJump = 0
+        maxEndJump = 0
+        jumps = 0
+
+        for i in range(len(nums)-1):
+            maxEndJump = max(maxEndJump, i + nums[i])
+
+            if maxEndJump >= len(nums)-1:
+                jumps += 1
+                break
+
+            if i == currEndJump:
+                jumps += 1
+                currEndJump = maxEndJump
+
+        return jumps            
+        
