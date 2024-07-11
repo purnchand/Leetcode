@@ -1,0 +1,5 @@
+SELECT Name, Bonus
+FROM Employee e
+LEFT JOIN Bonus b
+ON e.empid = b.empid
+WHERE ifnull(Bonus, 0) < 1000
