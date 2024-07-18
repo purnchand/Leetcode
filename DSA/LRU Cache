@@ -1,0 +1,89 @@
+class Node:
+    def __init__(self, key, value):
+        self.left = None
+        self.right = None
+        self.key = key
+        self.value = value 
+
+class LinkedList:
+    def __init__(self):
+        self.length = 0
+        self.head = None
+        self.tail = None
+
+    def remove(self, node):
+        # if it's the only node
+        if node.left == None and node.right == None:
+            self.head = self.tail = None
+
+        # if it's the head
+        elif node.left == None:
+            self.head = node.right
+            self.head.left = None
+            
+        # if it's the tail
+        elif node.right == None:
+            self.tail = node.left
+            self.tail.right = None
+
+        # if it's in the middle
+        else:
+            node.left.right = node.right
+            node.right.left = node.left
+
+        self.length -= 1
+
+    def insert(self, node):
+        # if empty
+        if self.head == None:
+            self.head = self.tail = node
+        else:
+            node.left = None
+            node.right = self.head
+            self.head.left = node
+            self.head = node
+      
+        self.length += 1
+
+
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = {}
+        self.list = LinkedList()
+
+    def get(self, key: int) -> int:
+        if key in self.cache:
+            node = self.cache[key]
+
+            # move node to be head
+            self.list.remove(node)
+            self.list.insert(node)
+
+            return node.value
+        return -1
+
+    def put(self, key: int, value: int) -> None:
+        # if key exists, remove prev node
+        if key in self.cache:
+            self.list.remove(self.cache[key])
+        
+        new_node = Node(key, value)
+        self.list.insert(new_node)
+        self.cache[key] = new_node
+
+        if self.list.length > self.capacity:
+            # remove last element
+            key_to_remove = self.list.tail.key 
+            node_to_remove = self.list.tail
+
+            self.list.remove(node_to_remove)
+            del self.cache[key_to_remove]
+        
+
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
